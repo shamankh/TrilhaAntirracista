@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Trilha Antirracista Digital</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #F5F5F5;
+            margin: 0;
+            padding: 0;
+        }
+        .intro {
+            background: #1a202c;
+            color: #fff;
+            padding: 32px;
+            text-align: center;
+            font-size: 1.4em;
+        }
+        .creditos {
+            font-size: 1em;
+            margin-top: 18px;
+            color: #bee3f8;
+            font-weight: bold;
+            letter-spacing: 0.02em;
+        }
+        .escola {
+            font-size: 1em;
+            margin-top: 4px;
+            color: #d3f9d8;
+            font-weight: bold;
+            letter-spacing: 0.01em;
+        }
+        .trilha-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 32px;
+            padding: 32px;
+            flex-wrap: wrap;
+        }
+        .quadro {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 2px 16px #0002;
+            padding: 24px;
+            width: 250px;
+            text-align: center;
+            margin-bottom: 32px;
+            min-height: 450px;
+            position: relative;
+        }
+        .quadro img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: #f0f0f0;
+            margin-bottom: 16px;
+        }
+        .quadro h3 {
+            margin: 8px 0 16px 0;
+            font-size: 1.18em;
+            color: #222;
+        }
+        .dropzone {
+            min-height: 140px;
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: background 0.2s;
+            gap: 6px;
+        }
+        .dropzone.active {
+            background: #b2f5ea;
+        }
+        .context {
+            margin-top: 12px;
+            color: #555;
+            font-size: 0.96em;
+            display: none;
+            background: #e6fffa;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .frases-container {
+            margin: 24px 48px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px #0001;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+        .frase-card {
+            background: #bee3f8;
+            color: #222;
+            padding: 18px 14px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: grab;
+            box-shadow: 0 2px 4px #0001;
+            transition: background 0.15s;
+            min-width: 200px;
+            max-width: 320px;
+            margin: 5px;
+            text-align: center;
+            user-select: none;
+        }
+        .frase-card.dragging {
+            opacity: 0.5;
+        }
+        .success {
+            background: #48bb78 !important;
+            color: #fff !important;
+            font-weight: bold;
+        }
+        .parabens {
+            text-align: center;
+            background: #38b2ac;
+            color: #fff;
+            padding: 22px;
+            border-radius: 18px;
+            font-size: 1.3em;
+            margin: 24px auto;
+            width: 420px;
+            display: none;
+        }
+        audio {
+            display: none;
+        }
+        /* Modal estilo */
+        #modal-contexto {
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            background: rgba(30, 41, 59, 0.85); 
+            z-index: 9999; 
+            align-items: center; 
+            justify-content: center;
+        }
+        #modal-contento-inner {
+            background: #fff;
+            border-radius: 22px;
+            max-width: 600px;
+            padding: 32px 28px;
+            box-shadow: 0 8px 40px #0004;
+            font-size: 1.18em;
+            color: #222;
+            text-align: left;
+            position: relative;
+        }
+        #fechar-modal-contexto {
+            margin-top: 28px;
+            font-size: 1.1em;
+            padding: 8px 24px;
+            background: #38b2ac;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: not-allowed;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        #fechar-modal-contexto.enabled {
+            cursor: pointer;
+            opacity: 1;
+        }
+        @media (max-width: 900px) {
+            .trilha-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            #modal-contento-inner {
+                max-width: 95vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro">
+        <h2>Trilha Antirracista: Vozes Negras Que Inspiram</h2>
+        <p>
+            Conheça mulheres e homens negros que mudaram a história do Brasil e desafiaram o racismo com palavras e ação.<br>
+            Arraste as frases para o quadro do(a) autor(a) correto(a). Ao acertar, leia o contexto para aprender mais.<br>
+            Quando completar todos, sua trilha estará feita!
+        </p>
+        <div class="creditos">
+            Produzido por - Christopher de Andrade Cardoso <br>
+            Colaboradoras - Danielli Santos & Patricia Brizola
+        </div>
+        <div class="escola">
+            PEI - Edison Bastos Gasparini Pref.
+        </div>
+    </div>
+
+    <div class="trilha-container" id="trilha-container">
+        <!-- Quadros dos autores serão inseridos aqui -->
+    </div>
+
+    <div class="frases-container" id="frases-container">
+        <!-- Frases para arrastar serão inseridas aqui -->
+    </div>
+
+    <div class="parabens" id="parabens-msg">
+        Parabéns! Você completou a Trilha Antirracista! <br>
+        Compartilhe com a turma e continue espalhando conhecimento!
+        <br><button onclick="window.location.reload()">Reiniciar</button>
+    </div>
+
+    <audio id="success-audio" src="https://cdn.pixabay.com/audio/2022/08/20/audio_123rfyph.mp3"></audio>
+
+    <div id="modal-contexto">
+        <div id="modal-contento-inner">
+            <div id="modal-contexto-texto"></div>
+            <button id="fechar-modal-contexto" disabled>Fechar (30)</button>
+        </div>
+    </div>
+<script>
+const autores = [
+    {
+        nome: "Carolina Maria de Jesus",
+        img: "carolina.png",
+        frases: [
+            "O Brasil precisa ser dirigido por uma pessoa que já passou fome. A fome também é professora. Quem passa fome aprende a pensar no próximo e nas crianças.",
+            "Tenho raiva dos ricos, porque eles exploram os pobres, e ninguém fala nada. O pobre está sempre calado, sempre com medo.",
+            "Aqui na favela, quando alguém morre, não tem ninguém para lamentar. O pobre só serve para trabalhar e morrer."
+        ],
+        contextos: [
+            "Moradora da favela do Canindé, em São Paulo, Carolina viveu e registrou a fome e a miséria em seu diário. Para ela, quem já sentiu a dor da fome nunca esquece do sofrimento do outro. Essa frase revela sua esperança em uma sociedade mais empática, governada por quem realmente entende a realidade do povo.",
+            "Carolina nunca aceitou a injustiça social e sempre denunciou a desigualdade entre ricos e pobres. Sua escrita é um grito contra a exploração, mostrando como o silêncio dos mais pobres é resultado de um sistema opressor que cala e invisibiliza as vozes das periferias.",
+            "Em seu diário, Carolina narra a solidão e o abandono vividos nas favelas. Para ela, a vida dos pobres era desvalorizada pela sociedade. Essa frase expõe o descaso e a invisibilidade impostos aos moradores das periferias urbanas, mostrando a urgência de mudança social."
+        ]
+    },
+    {
+        nome: "Conceição Evaristo",
+        img: "conceicao.png",
+        frases: [
+            "Eles combinaram de nos matar, mas a gente combinou de não morrer.",
+            "Minha mãe sempre disse: quem nasceu para semente não morre no vento.",
+            "Minha escrevivência não se limita ao papel, é grito, é vida, é corpo inteiro lutando contra o silêncio imposto."
+        ],
+        contextos: [
+            "Essa escritora cresceu em meio às dificuldades da periferia, cercada por desafios e resistências. Ela transformou o cotidiano da mulher negra em literatura e, ao invés de aceitar o silêncio imposto, se levantou como voz de muitas. Esta frase nasceu do enfrentamento diário à exclusão e mostra a força coletiva da sobrevivência.",
+            "A ancestralidade é marca profunda na obra desta autora. Desde pequena, aprendeu com sua mãe e avó que o povo negro é como semente: pode até ser levado pelo vento da opressão, mas sempre cria raiz e resiste. Suas palavras sempre resgatam a força das origens e o legado transmitido de geração em geração.",
+            "Para essa autora, escrever é existir. Ela criou o conceito de “escrevivência” porque sente que sua escrita nasce da vida real, das dores, conquistas e lutas. Suas obras denunciam a tentativa de calar a voz da mulher negra, mas sua literatura é ato de resistência — é vida gritando por justiça."
+        ]
+    },
+    {
+        nome: "Lima Barreto",
+        img: "lima.png",
+        frases: [
+            "Não me querem por causa da minha cor.",
+            "A cor do meu sangue, a forma dos meus cabelos, a planície do meu nariz e a dos meus lábios, tudo me denuncia. E tudo me condena.",
+            "Se eu não fosse preto, seria mais considerado; seria até político."
+        ],
+        contextos: [
+            "Filho de ex-escravizados, Lima Barreto enfrentou preconceito em todas as áreas da vida, inclusive na literatura. Mesmo sendo um dos grandes escritores do país, foi constantemente rejeitado pelos círculos elitistas. Essa frase traduz o peso do racismo institucional vivido por ele, um olhar direto sobre a exclusão sofrida no Brasil do século XX.",
+            "Lima Barreto nunca escondeu suas origens, e sempre deixou claro o quanto a aparência negra era motivo de julgamento. Sua literatura traz, de forma crua, a experiência do negro que é acusado e condenado pelo simples fato de existir e ocupar espaços onde poucos esperam vê-lo.",
+            "Ao escrever sobre a própria trajetória, Lima Barreto deixa claro como a cor da pele influenciou o reconhecimento (ou a falta dele) na sociedade. Ele sabia que muitos dos seus méritos seriam mais valorizados se fosse branco. Com essa frase, escancarou a barreira do preconceito e denunciou o racismo estrutural da elite brasileira."
+        ]
+    },
+    {
+        nome: "Djamila Ribeiro",
+        img: "djamila.png",
+        frases: [
+            "Não basta não ser racista, é preciso ser antirracista.",
+            "Ser antirracista é combater toda e qualquer forma de discriminação racial, é questionar privilégios e lutar pela justiça social.",
+            "O silêncio diante do racismo é uma forma de consentimento."
+        ],
+        contextos: [
+            "Djamila Ribeiro é referência nacional na luta contra o racismo. Essa frase virou lema de mobilização porque ela acredita que, para mudar de verdade, não basta se omitir ou ficar em cima do muro — é preciso agir, se posicionar e combater o racismo em todas as esferas.",
+            "Filósofa e ativista, Djamila ensina que o antirracismo exige ação consciente. Não é só sobre respeitar, mas sobre desconstruir privilégios, enfrentar desigualdades e lutar para que a justiça social seja realidade para todos.",
+            "Para Djamila, não se posicionar é compactuar. Ao longo de sua carreira, ela provoca o debate e chama atenção para a necessidade de romper com a neutralidade — pois o silêncio acaba protegendo quem pratica a discriminação."
+        ]
+    },
+    {
+        nome: "Sueli Carneiro",
+        img: "sueli.png",
+        frases: [
+            "O racismo é uma experiência fundadora da existência da população negra no Brasil. Ele não é acessório, é constitutivo.",
+            "A luta antirracista é um dever de toda a sociedade e não apenas das vítimas do racismo.",
+            "A democracia racial é um mito que mascara a violência cotidiana sofrida pela população negra."
+        ],
+        contextos: [
+            "Referência do movimento negro, Sueli Carneiro denuncia que o racismo não é algo pontual, mas está na raiz da formação da sociedade brasileira. Sua luta é para desconstruir essa estrutura desde a base.",
+            "Ativista e pensadora, Sueli reforça que combater o racismo não é obrigação apenas das pessoas negras. A sociedade como um todo precisa assumir essa responsabilidade e agir por justiça.",
+            "Ao longo dos anos, muito se falou que o Brasil era uma democracia racial, mas Sueli escancara que isso é uma ilusão. O racismo persiste, muitas vezes invisível, mas machuca, exclui e mata diariamente."
+        ]
+    },
+    {
+        nome: "Luiz Gama",
+        img: "luiz.png",
+        frases: [
+            "Que país é este, onde o preto, o pardo e o mestiço não são homens e sim mercadoria?",
+            "O que mais me espanta não é o crime do escravizador, mas a indiferença dos homens livres.",
+            "A liberdade não se dá, conquista-se. E todo homem tem direito de ser livre."
+        ],
+        contextos: [
+            "Ex-escravizado, Luiz Gama se tornou advogado autodidata e libertou centenas de pessoas da escravidão. Com esta frase, ele denuncia a desumanização brutal sofrida pelos negros no Brasil escravista.",
+            "Para Luiz Gama, a pior violência não era só a escravidão em si, mas o silêncio e a omissão dos que poderiam lutar contra ela. Ele provoca: de que lado você está, quem se cala diante da injustiça?",
+            "A luta de Luiz Gama foi pela liberdade conquistada, não concedida por benevolência de ninguém. Ele sempre incentivou a resistência, a luta ativa e a consciência de que todo ser humano merece ser livre por direito."
+        ]
+    }
+];
+
+// Monta os quadros
+const trilha = document.getElementById("trilha-container");
+autores.forEach((autor, idx) => {
+    let el = document.createElement("div");
+    el.className = "quadro";
+    el.innerHTML = `
+        <img src="${autor.img}" alt="Retrato de ${autor.nome}">
+        <h3>${autor.nome}</h3>
+        <div class="dropzone" data-autor="${idx}"></div>
+        <div class="context" id="context-${idx}"></div>
+    `;
+    trilha.appendChild(el);
+});
+
+// Cria as frases embaralhadas
+let frasesArr = [];
+autores.forEach((autor, aidx) => {
+    autor.frases.forEach((frase, fidx) => {
+        frasesArr.push({
+            frase: frase,
+            autorIdx: aidx,
+            fraseIdx: fidx
+        });
+    });
+});
+frasesArr = frasesArr.sort(() => Math.random() - 0.5); // embaralha
+
+// Renderiza os cards de frases
+const frasesContainer = document.getElementById("frases-container");
+frasesArr.forEach((f, idx) => {
+    let el = document.createElement("div");
+    el.className = "frase-card";
+    el.innerText = f.frase;
+    el.setAttribute("draggable", true);
+    el.dataset.autor = f.autorIdx;
+    el.dataset.frase = f.fraseIdx;
+    frasesContainer.appendChild(el);
+});
+
+// Drag and Drop + Modal Control
+let dragging = null;
+let bloqueado = false;
+
+document.querySelectorAll('.frase-card').forEach(card => {
+    card.addEventListener('dragstart', e => {
+        if (bloqueado) { e.preventDefault(); return false; }
+        dragging = card;
+        setTimeout(() => card.classList.add('dragging'), 0);
+    });
+    card.addEventListener('dragend', e => {
+        dragging = null;
+        card.classList.remove('dragging');
+    });
+});
+
+document.querySelectorAll('.dropzone').forEach(drop => {
+    drop.addEventListener('dragover', e => {
+        if (bloqueado) return;
+        e.preventDefault();
+        drop.classList.add('active');
+    });
+    drop.addEventListener('dragleave', e => {
+        drop.classList.remove('active');
+    });
+    drop.addEventListener('drop', e => {
+        drop.classList.remove('active');
+        if (bloqueado) return;
+        if (dragging && dragging.dataset.autor == drop.dataset.autor && drop.children.length < 3) {
+            dragging.classList.add('success');
+            drop.appendChild(dragging);
+            let autorIdx = Number(dragging.dataset.autor);
+            let fraseIdx = Number(dragging.dataset.frase);
+
+            // Mostra contexto no quadro (acumulando)
+            let ctx = document.getElementById(`context-${autorIdx}`);
+            if (!ctx.innerHTML.includes(autores[autorIdx].contextos[fraseIdx])) {
+                ctx.innerHTML += `<div style="margin-bottom:6px;">${autores[autorIdx].contextos[fraseIdx]}</div>`;
+            }
+            ctx.style.display = "block";
+            playSuccess();
+            // Mostra modal de contexto (bloqueia tudo)
+            showModalContexto(autores[autorIdx].contextos[fraseIdx]);
+            checkFim();
+        }
+    });
+});
+
+function checkFim() {
+    let completou = [...document.querySelectorAll('.dropzone')]
+        .every(dz => dz.children.length === 3);
+    if (completou) {
+        document.getElementById('parabens-msg').style.display = 'block';
+    }
+}
+
+function playSuccess() {
+    const audio = document.getElementById('success-audio');
+    if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+    }
+}
+
+// ---- Modal de Contexto ----
+const modal = document.getElementById('modal-contexto');
+const modalTexto = document.getElementById('modal-contexto-texto');
+const fecharModalBtn = document.getElementById('fechar-modal-contexto');
+let modalTimeout = null;
+
+function showModalContexto(texto) {
+    bloqueado = true;
+    modalTexto.innerHTML = texto;
+    modal.style.display = 'flex';
+    fecharModalBtn.disabled = true;
+    fecharModalBtn.classList.remove("enabled");
+    fecharModalBtn.innerText = 'Fechar (30)';
+    let tempo = 30;
+    modalTimeout = setInterval(() => {
+        tempo--;
+        fecharModalBtn.innerText = `Fechar (${tempo})`;
+        if (tempo <= 0) {
+            clearInterval(modalTimeout);
+            fecharModalBtn.disabled = false;
+            fecharModalBtn.classList.add("enabled");
+            fecharModalBtn.innerText = 'Fechar';
+        }
+    }, 1000);
+}
+
+fecharModalBtn.addEventListener('click', () => {
+    if (!fecharModalBtn.disabled) {
+        modal.style.display = 'none';
+        bloqueado = false;
+    }
+});
+</script>
+</body>
+</html>
