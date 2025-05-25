@@ -428,8 +428,8 @@ function showModalContexto(texto) {
     modal.style.display = 'flex';
     fecharModalBtn.disabled = true;
     fecharModalBtn.classList.remove("enabled");
-    fecharModalBtn.innerText = 'Fechar (30)';
-    let tempo = 30;
+    fecharModalBtn.innerText = 'Fechar (20)';
+    let tempo = 20;
     modalTimeout = setInterval(() => {
         tempo--;
         fecharModalBtn.innerText = `Fechar (${tempo})`;
