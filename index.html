@@ -6,16 +6,16 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #F5F5F5;
+            background: #f8fafc;
             margin: 0;
             padding: 0;
         }
-        .intro {
+        .intro, .boas-vindas {
             background: #1a202c;
             color: #fff;
-            padding: 32px;
+            padding: 32px 10px 16px 10px;
             text-align: center;
-            font-size: 1.4em;
+            font-size: 1.3em;
         }
         .creditos {
             font-size: 1em;
@@ -31,96 +31,164 @@
             font-weight: bold;
             letter-spacing: 0.01em;
         }
-        .trilha-container {
+        .boas-vindas {
+            background: #234e52;
+            color: #fff;
+            font-size: 1.08em;
+            padding: 24px 10px 34px 10px;
+        }
+        .btn-comecar, .virar-carta-btn {
+            display: block;
+            margin: 22px auto 0 auto;
+            background: #38b2ac;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 48px;
+            font-size: 1.25em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 10px #0001;
+            transition: background 0.15s;
+        }
+        .btn-comecar:active, .virar-carta-btn:active {
+            background: #234e52;
+        }
+        .tela-jogo { display: none; }
+        .trilha-board {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            gap: 32px;
-            padding: 32px;
+            align-items: flex-end;
+            gap: 60px;
+            margin: 48px 0 32px 0;
+            position: relative;
             flex-wrap: wrap;
         }
-        .quadro {
-            background: #fff;
-            border-radius: 24px;
-            box-shadow: 0 2px 16px #0002;
-            padding: 24px;
-            width: 250px;
-            text-align: center;
-            margin-bottom: 32px;
-            min-height: 450px;
-            position: relative;
-        }
-        .quadro img {
-            width: 160px;
-            height: 160px;
-            object-fit: contain;
-            border-radius: 16px;
-            background: #f0f0f0;
-            margin-bottom: 16px;
-        }
-        .quadro h3 {
-            margin: 8px 0 16px 0;
-            font-size: 1.18em;
-            color: #222;
-        }
-        .dropzone {
-            min-height: 140px;
-            background: #f7fafc;
-            border: 2px dashed #cbd5e0;
-            border-radius: 12px;
-            margin-bottom: 8px;
+        .autor-retrato {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            transition: background 0.2s;
-            gap: 6px;
+            min-width: 330px;
+            max-width: 340px;
         }
-        .dropzone.active {
-            background: #b2f5ea;
-        }
-        .context {
-            margin-top: 12px;
-            color: #555;
-            font-size: 0.96em;
-            display: none;
-            background: #e6fffa;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        .frases-container {
-            margin: 24px 48px;
+        .autor-retrato img {
+            width: 320px;
+            height: 180px;
+            object-fit: contain;
+            border-radius: 20px;
             background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 2px 8px #0001;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
+            margin-bottom: 12px;
+            border: 4.5px solid #4299e1;
+            box-shadow: 0 4px 24px #0003;
+            padding: 0;
         }
-        .frase-card {
-            background: #bee3f8;
-            color: #222;
-            padding: 18px 14px;
+        .autor-retrato h3 {
+            font-size: 1.18em;
+            color: #234e52;
+            text-align: center;
+            margin: 8px 0 6px 0;
+            width: 320px;
+            background: #e6fffa;
             border-radius: 10px;
-            font-size: 1em;
-            cursor: grab;
-            box-shadow: 0 2px 4px #0001;
-            transition: background 0.15s;
-            min-width: 200px;
-            max-width: 320px;
-            margin: 5px;
+            padding: 4px 0;
+        }
+        .trilha-espacos {
+            display: flex;
+            flex-direction: row;
+            gap: 22px;
+            margin: 0 12px;
+        }
+        .trilha-quadrado {
+            width: 64px;
+            height: 64px;
+            background: #fff;
+            border: 3px dashed #48bb78;
+            border-radius: 18px;
+            box-shadow: 0 1px 8px #0001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: background 0.2s, border 0.2s;
+            font-size: 2.1em;
+        }
+        .trilha-quadrado.filled {
+            background: #38b2ac;
+            border: 3px solid #38b2ac;
+            color: #fff;
+            font-size: 2.5em;
+            font-weight: bold;
+            justify-content: center;
+            align-items: center;
+        }
+        .trilha-quadrado.filled::after {
+            content: "✔";
+            color: #fff;
+            font-size: 1.6em;
+        }
+        .trilha-quadrado.active {
+            background: #fffde7;
+            border-color: #ecc94b;
+        }
+        .carta-central-area {
+            display: flex;
+            justify-content: center;
+            margin: 35px 0 12px 0;
+        }
+        .carta-baralho {
+            background: #fffbea;
+            color: #222;
+            padding: 32px 34px 28px 34px;
+            border-radius: 18px;
+            font-size: 1.22em;
+            box-shadow: 0 4px 28px #ecc94b88;
+            border: 3px solid #ecc94b;
+            min-width: 290px;
+            max-width: 460px;
+            margin: 0 auto;
             text-align: center;
             user-select: none;
+            cursor: grab;
+            position: relative;
+            transition: box-shadow 0.22s, border-color 0.16s;
+            z-index: 10;
+            display: none;
         }
-        .frase-card.dragging {
-            opacity: 0.5;
+        .carta-baralho.show {
+            display: block;
+            animation: aparecerCarta 0.35s;
         }
-        .success {
-            background: #48bb78 !important;
-            color: #fff !important;
+        .carta-baralho.selecionada {
+            border-color: #38b2ac;
+            box-shadow: 0 0 24px #38b2ac66;
+        }
+        @keyframes aparecerCarta {
+            from { transform: rotateY(80deg) scale(0.85); opacity: 0;}
+            to { transform: rotateY(0deg) scale(1); opacity: 1;}
+        }
+        .virar-carta-btn {
+            display: block;
+            margin: 18px auto 0 auto;
+            background: #38b2ac;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 40px;
+            font-size: 1.13em;
             font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 10px #0001;
+            transition: background 0.15s;
+        }
+        .virar-carta-btn:active {
+            background: #234e52;
+        }
+        .carta-baralho img {
+            width: 60px;
+            height: 90px;
+            display: block;
+            margin: -18px auto 6px auto;
+            opacity: 0.6;
         }
         .parabens {
             text-align: center;
@@ -130,13 +198,9 @@
             border-radius: 18px;
             font-size: 1.3em;
             margin: 24px auto;
-            width: 420px;
+            width: 480px;
             display: none;
         }
-        audio {
-            display: none;
-        }
-        /* Modal estilo */
         #modal-contexto {
             display: none; 
             position: fixed; 
@@ -151,13 +215,24 @@
         #modal-contento-inner {
             background: #fff;
             border-radius: 22px;
-            max-width: 600px;
+            max-width: 650px;
+            min-width: 340px;
             padding: 32px 28px;
             box-shadow: 0 8px 40px #0004;
             font-size: 1.18em;
             color: #222;
             text-align: left;
             position: relative;
+        }
+        .frase-modal {
+            color: #234e52;
+            font-size: 1.1em;
+            font-weight: bold;
+            background: #fffbea;
+            border-left: 7px solid #ecc94b;
+            margin-bottom: 18px;
+            padding: 10px 15px;
+            border-radius: 18px;
         }
         #fechar-modal-contexto {
             margin-top: 28px;
@@ -175,25 +250,77 @@
             cursor: pointer;
             opacity: 1;
         }
+        .conclusao-tela {
+            display: none;
+            background: #f7fafc;
+            padding: 36px 8vw;
+        }
+        .autor-conclusao {
+            margin-bottom: 38px;
+            border-bottom: 2.5px solid #bee3f8;
+            padding-bottom: 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .autor-conclusao img {
+            width: 500px;
+            height: 280px;
+            border-radius: 22px;
+            border: 5px solid #4299e1;
+            background: #fff;
+            object-fit: contain;
+            box-shadow: 0 4px 32px #0003;
+        }
+        .autor-conclusao-info {
+            max-width: 620px;
+        }
+        .autor-conclusao-info h3 {
+            margin: 0 0 10px 0;
+            color: #234e52;
+            font-size: 1.28em;
+        }
+        .autor-conclusao-info .frase-concluida {
+            margin: 11px 0;
+            background: #e6fffa;
+            border-left: 7px solid #ecc94b;
+            padding: 10px 18px;
+            border-radius: 11px;
+            font-size: 1.06em;
+            color: #222;
+            font-weight: bold;
+        }
+        .autor-conclusao-info .explica {
+            color: #222;
+            margin-bottom: 12px;
+            margin-top: -6px;
+            font-size: 0.99em;
+        }
+        @media (max-width: 1350px) {
+            .trilha-board { gap: 20px; }
+            .autor-retrato img { width: 230px; height: 129px; }
+            .autor-retrato h3 { width: 220px; }
+            .conclusao-tela { padding: 22px 4vw; }
+            .autor-conclusao img { width: 350px; height: 196px; }
+        }
         @media (max-width: 900px) {
-            .trilha-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            #modal-contento-inner {
-                max-width: 95vw;
-            }
+            .trilha-board { flex-wrap: wrap; gap: 10px;}
+            .autor-conclusao img { width: 210px; height: 118px; }
+            .conclusao-tela { padding: 10px 1vw; }
+        }
+        @media (max-width: 700px) {
+            .trilha-board { flex-direction: column; align-items: center; }
+            .carta-central-area { margin: 16px 0; }
+            .conclusao-tela { padding: 6px 0; }
+            .autor-conclusao img { width: 95vw; height: auto; }
         }
     </style>
 </head>
 <body>
-    <div class="intro">
+    <!-- TELA 1 -->
+    <div class="intro" id="tela1">
         <h2>Trilha Antirracista: Vozes Negras Que Inspiram</h2>
-        <p>
-            Conheça mulheres e homens negros que mudaram a história do Brasil e desafiaram o racismo com palavras e ação.<br>
-            Arraste as frases para o quadro do(a) autor(a) correto(a). Ao acertar, leia o contexto para aprender mais.<br>
-            Quando completar todos, sua trilha estará feita!
-        </p>
         <div class="creditos">
             Produzido por - Christopher de Andrade Cardoso <br>
             Colaboradoras - Danielli Santos & Patricia Brizola
@@ -202,30 +329,58 @@
             PEI - Edison Bastos Gasparini Pref.
         </div>
     </div>
-
-    <div class="trilha-container" id="trilha-container">
-        <!-- Quadros dos autores serão inseridos aqui -->
+    <div class="boas-vindas" id="tela1-bemvindo">
+        Bem-vindos à Trilha Antirracista!<br>
+        Aqui você vai conhecer mulheres e homens negros que mudaram a história do Brasil, lutaram contra o racismo e inspiram gerações com suas palavras e ações.<br><br>
+        Em cada quadro, descubra um pouco da vida e da luta desses autores. Entre um quadro e outro, resolva o enigma e encontre a frase que traduz a força, a resistência e a inteligência de quem nunca aceitou o silêncio diante da injustiça.<br><br>
+        <b>Seu desafio:</b> acerte qual frase pertence a cada autor ou autora.<br>
+        A luta antirracista não termina aqui. Ela continua todos os dias, em cada atitude.<br>
+        <b>Quem faz a trilha, faz história.</b>
+        <button class="btn-comecar" id="btn-comecar">Começar trilha!</button>
     </div>
 
-    <div class="frases-container" id="frases-container">
-        <!-- Frases para arrastar serão inseridas aqui -->
+    <!-- TELA 2: JOGO -->
+    <div class="tela-jogo" id="tela2-jogo">
+        <div class="trilha-board" id="trilha-board">
+            <!-- Autores e espaços da trilha via JS -->
+        </div>
+        <div class="carta-central-area">
+            <div class="carta-baralho" id="carta-baralho" draggable="true">
+                <!-- Aqui vai a imagem do baralho ou a frase -->
+            </div>
+        </div>
+        <button class="virar-carta-btn" id="virar-carta-btn">
+            <img src="baralho.png" alt="Baralho" style="width:28px;height:40px;vertical-align:middle;margin-right:9px;"> Virar carta!
+        </button>
+        <div class="parabens" id="parabens-msg">
+            Parabéns! Você completou a Trilha Antirracista! <br>
+            Veja as frases e histórias completas abaixo.<br>
+            <button onclick="mostrarConclusao()">Ver conclusão</button>
+        </div>
     </div>
 
-    <div class="parabens" id="parabens-msg">
-        Parabéns! Você completou a Trilha Antirracista! <br>
-        Compartilhe com a turma e continue espalhando conhecimento!
-        <br><button onclick="window.location.reload()">Reiniciar</button>
+    <!-- TELA 3: CONCLUSÃO -->
+    <div class="conclusao-tela" id="tela3-conclusao">
+        <!-- Aqui aparece, via JS, o mural final com cada autor, foto e as frases encaixadas e explicadas -->
     </div>
 
-    <audio id="success-audio" src="https://cdn.pixabay.com/audio/2022/08/20/audio_123rfyph.mp3"></audio>
+    <!-- Sons do jogo -->
+    <audio id="success-audio" src="comencaixe.mp3"></audio>
+    <audio id="erro-audio" src="semencaixe.mp3"></audio>
+    <audio id="virarcarta-audio" src="cartavirando.mp3"></audio>
 
     <div id="modal-contexto">
         <div id="modal-contento-inner">
             <div id="modal-contexto-texto"></div>
-            <button id="fechar-modal-contexto" disabled>Fechar (30)</button>
+            <button id="fechar-modal-contexto" disabled>Fechar (20)</button>
         </div>
     </div>
 <script>
+function isMobile() {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop|Mobile/i.test(navigator.userAgent);
+}
+
+/* ----------- DADOS DOS AUTORES E FRASES ------------ */
 const autores = [
     {
         nome: "Carolina Maria de Jesus",
@@ -313,21 +468,54 @@ const autores = [
     }
 ];
 
-// Monta os quadros
-const trilha = document.getElementById("trilha-container");
-autores.forEach((autor, idx) => {
-    let el = document.createElement("div");
-    el.className = "quadro";
-    el.innerHTML = `
-        <img src="${autor.img}" alt="Retrato de ${autor.nome}">
-        <h3>${autor.nome}</h3>
-        <div class="dropzone" data-autor="${idx}"></div>
-        <div class="context" id="context-${idx}"></div>
-    `;
-    trilha.appendChild(el);
-});
+/* --------- NAVEGAÇÃO ENTRE TELAS ---------- */
+const tela1 = document.getElementById('tela1');
+const tela1b = document.getElementById('tela1-bemvindo');
+const tela2 = document.getElementById('tela2-jogo');
+const tela3 = document.getElementById('tela3-conclusao');
+document.getElementById('btn-comecar').onclick = function() {
+    tela1.style.display = 'none';
+    tela1b.style.display = 'none';
+    tela2.style.display = 'block';
+    window.scrollTo(0,0);
+}
 
-// Cria as frases embaralhadas
+/* --------- MONTAGEM DA TRILHA/JOGO --------- */
+const trilhaBoard = document.getElementById("trilha-board");
+function montarTrilha() {
+    trilhaBoard.innerHTML = '';
+    autores.forEach((autor, aidx) => {
+        // Autor
+        let elAutor = document.createElement("div");
+        elAutor.className = "autor-retrato";
+        elAutor.innerHTML = `
+            <img src="${autor.img}" alt="Retrato de ${autor.nome}">
+            <h3>${autor.nome}</h3>
+        `;
+        trilhaBoard.appendChild(elAutor);
+
+        // 3 espaços da trilha (quadrados)
+        let espacos = document.createElement("div");
+        espacos.className = "trilha-espacos";
+        for (let i = 0; i < 3; i++) {
+            let quad = document.createElement("div");
+            quad.className = "trilha-quadrado";
+            quad.dataset.autor = aidx;
+            quad.dataset.idx = i;
+            espacos.appendChild(quad);
+        }
+        trilhaBoard.appendChild(espacos);
+    });
+}
+montarTrilha();
+
+/* ------------ BARALHO, CARTA E SONS -------------- */
+const cartaBaralho = document.getElementById("carta-baralho");
+const btnVirarCarta = document.getElementById("virar-carta-btn");
+const audioAcerto = document.getElementById('success-audio');
+const audioErro = document.getElementById('erro-audio');
+const audioVirar = document.getElementById('virarcarta-audio');
+
 let frasesArr = [];
 autores.forEach((autor, aidx) => {
     autor.frases.forEach((frase, fidx) => {
@@ -338,93 +526,146 @@ autores.forEach((autor, aidx) => {
         });
     });
 });
-frasesArr = frasesArr.sort(() => Math.random() - 0.5); // embaralha
+frasesArr = frasesArr.sort(() => Math.random() - 0.5);
 
-// Renderiza os cards de frases
-const frasesContainer = document.getElementById("frases-container");
-frasesArr.forEach((f, idx) => {
-    let el = document.createElement("div");
-    el.className = "frase-card";
-    el.innerText = f.frase;
-    el.setAttribute("draggable", true);
-    el.dataset.autor = f.autorIdx;
-    el.dataset.frase = f.fraseIdx;
-    frasesContainer.appendChild(el);
-});
-
-// Drag and Drop + Modal Control
-let dragging = null;
+let cartaAtual = null;
+let idxCarta = 0;
 let bloqueado = false;
+let mobileSelecionando = false; // true se está no processo de "pegar" a carta no mobile
 
-document.querySelectorAll('.frase-card').forEach(card => {
-    card.addEventListener('dragstart', e => {
-        if (bloqueado) { e.preventDefault(); return false; }
-        dragging = card;
-        setTimeout(() => card.classList.add('dragging'), 0);
-    });
-    card.addEventListener('dragend', e => {
-        dragging = null;
-        card.classList.remove('dragging');
-    });
-});
+function mostraBaralho() {
+    cartaBaralho.innerHTML = `<img src="baralho.png" alt="Baralho" style="width:80px;height:120px;opacity:0.92;">`;
+    cartaBaralho.classList.add("show");
+    cartaBaralho.setAttribute("draggable", !isMobile());
+    btnVirarCarta.style.display = "block";
+    cartaBaralho.classList.remove('selecionada');
+    mobileSelecionando = false;
+}
+mostraBaralho();
 
-document.querySelectorAll('.dropzone').forEach(drop => {
-    drop.addEventListener('dragover', e => {
-        if (bloqueado) return;
-        e.preventDefault();
-        drop.classList.add('active');
-    });
-    drop.addEventListener('dragleave', e => {
-        drop.classList.remove('active');
-    });
-    drop.addEventListener('drop', e => {
-        drop.classList.remove('active');
-        if (bloqueado) return;
-        if (dragging && dragging.dataset.autor == drop.dataset.autor && drop.children.length < 3) {
-            dragging.classList.add('success');
-            drop.appendChild(dragging);
-            let autorIdx = Number(dragging.dataset.autor);
-            let fraseIdx = Number(dragging.dataset.frase);
+btnVirarCarta.onclick = function () {
+    if (bloqueado) return;
+    if (idxCarta >= frasesArr.length) return;
+    let atual = frasesArr[idxCarta];
+    audioVirar.currentTime = 0;
+    audioVirar.play();
+    cartaAtual = atual;
+    cartaBaralho.innerHTML = `<div style="margin-bottom:6px;"><img src="baralho.png" alt="Baralho" style="width:36px;height:52px;opacity:0.55;"></div>${atual.frase}`;
+    cartaBaralho.classList.add("show");
+    cartaBaralho.setAttribute("draggable", !isMobile());
+    btnVirarCarta.style.display = "none";
+    cartaBaralho.classList.remove('selecionada');
+    mobileSelecionando = false;
+};
 
-            // Mostra contexto no quadro (acumulando)
-            let ctx = document.getElementById(`context-${autorIdx}`);
-            if (!ctx.innerHTML.includes(autores[autorIdx].contextos[fraseIdx])) {
-                ctx.innerHTML += `<div style="margin-bottom:6px;">${autores[autorIdx].contextos[fraseIdx]}</div>`;
-            }
-            ctx.style.display = "block";
-            playSuccess();
-            // Mostra modal de contexto (bloqueia tudo)
-            showModalContexto(autores[autorIdx].contextos[fraseIdx]);
-            checkFim();
+/* --------- DRAG AND DROP ---------- */
+if (!isMobile()) {
+    cartaBaralho.addEventListener('dragstart', function (e) {
+        if (!cartaAtual || bloqueado) e.preventDefault();
+        this.classList.add('dragging');
+    });
+    cartaBaralho.addEventListener('dragend', function (e) {
+        this.classList.remove('dragging');
+    });
+}
+
+function registrarDropzones() {
+    document.querySelectorAll('.trilha-quadrado').forEach(quad => {
+        if (!isMobile()) {
+            quad.addEventListener('dragover', function (e) {
+                if (!cartaAtual || bloqueado) return;
+                e.preventDefault();
+                this.classList.add('active');
+            });
+            quad.addEventListener('dragleave', function (e) {
+                this.classList.remove('active');
+            });
+            quad.addEventListener('drop', function (e) {
+                this.classList.remove('active');
+                if (!cartaAtual || bloqueado) return;
+
+                let autorAlvo = Number(this.dataset.autor);
+                if (autorAlvo === cartaAtual.autorIdx && !this.classList.contains('filled')) {
+                    this.classList.add('filled');
+                    this.innerHTML = ""; // Só marca o X
+                    playAcerto();
+                    showModalContexto(cartaAtual.frase, autores[autorAlvo].contextos[cartaAtual.fraseIdx]);
+                    if (!respostasFinal[autorAlvo]) respostasFinal[autorAlvo] = [];
+                    respostasFinal[autorAlvo].push({ frase: cartaAtual.frase, contexto: autores[autorAlvo].contextos[cartaAtual.fraseIdx] });
+                    cartaAtual = null;
+                    cartaBaralho.classList.remove("show");
+                    idxCarta++;
+                    setTimeout(() => {
+                        if (idxCarta < frasesArr.length) mostraBaralho();
+                        else document.getElementById('parabens-msg').style.display = 'block';
+                    }, 700);
+                } else {
+                    playErro();
+                }
+            });
+        } else {
+            // MOBILE: clique (touch) no quadrado para encaixar a carta SE estiver selecionada
+            quad.onclick = function () {
+                if (!cartaAtual || bloqueado || !mobileSelecionando) return;
+                let autorAlvo = Number(this.dataset.autor);
+                if (autorAlvo === cartaAtual.autorIdx && !this.classList.contains('filled')) {
+                    this.classList.add('filled');
+                    this.innerHTML = ""; // Só marca o X
+                    playAcerto();
+                    showModalContexto(cartaAtual.frase, autores[autorAlvo].contextos[cartaAtual.fraseIdx]);
+                    if (!respostasFinal[autorAlvo]) respostasFinal[autorAlvo] = [];
+                    respostasFinal[autorAlvo].push({ frase: cartaAtual.frase, contexto: autores[autorAlvo].contextos[cartaAtual.fraseIdx] });
+                    cartaAtual = null;
+                    cartaBaralho.classList.remove("show");
+                    cartaBaralho.classList.remove('selecionada');
+                    idxCarta++;
+                    setTimeout(() => {
+                        if (idxCarta < frasesArr.length) mostraBaralho();
+                        else document.getElementById('parabens-msg').style.display = 'block';
+                    }, 700);
+                } else {
+                    playErro();
+                }
+            };
         }
     });
-});
+}
+registrarDropzones();
 
-function checkFim() {
-    let completou = [...document.querySelectorAll('.dropzone')]
-        .every(dz => dz.children.length === 3);
-    if (completou) {
-        document.getElementById('parabens-msg').style.display = 'block';
-    }
+/* --- MOBILE: toque para "pegar" carta, depois toque no quadrado para soltar --- */
+if (isMobile()) {
+    cartaBaralho.onclick = function() {
+        if (!cartaAtual || bloqueado) return;
+        // só permite selecionar se a carta está virada
+        if (!cartaBaralho.classList.contains('show')) return;
+        // ativa modo de seleção
+        mobileSelecionando = true;
+        cartaBaralho.classList.add('selecionada');
+    };
 }
 
-function playSuccess() {
-    const audio = document.getElementById('success-audio');
-    if (audio) {
-        audio.currentTime = 0;
-        audio.play();
-    }
+/* -------- SONS --------- */
+function playAcerto() {
+    audioAcerto.currentTime = 0;
+    audioAcerto.play();
+}
+function playErro() {
+    audioErro.currentTime = 0;
+    audioErro.play();
 }
 
-// ---- Modal de Contexto ----
+/* -------- MODAL DE CONTEXTO --------- */
 const modal = document.getElementById('modal-contexto');
 const modalTexto = document.getElementById('modal-contexto-texto');
 const fecharModalBtn = document.getElementById('fechar-modal-contexto');
 let modalTimeout = null;
 
-function showModalContexto(texto) {
+function showModalContexto(frase, contexto) {
     bloqueado = true;
-    modalTexto.innerHTML = texto;
+    mobileSelecionando = false;
+    cartaBaralho.classList.remove('selecionada');
+    modalTexto.innerHTML =
+        `<div class="frase-modal">"${frase}"</div><div>${contexto}</div>`;
     modal.style.display = 'flex';
     fecharModalBtn.disabled = true;
     fecharModalBtn.classList.remove("enabled");
@@ -448,6 +689,30 @@ fecharModalBtn.addEventListener('click', () => {
         bloqueado = false;
     }
 });
+
+/* ---------- MURAL FINAL/CONCLUSÃO ------------ */
+let respostasFinal = [[],[],[],[],[],[]];
+function mostrarConclusao() {
+    tela2.style.display = 'none';
+    tela3.style.display = 'block';
+    window.scrollTo(0,0);
+    let html = `<h2 style="text-align:center;margin-bottom:18px;color:#234e52;">Mural da Trilha Antirracista</h2>`;
+    autores.forEach((autor, aidx) => {
+        html += `
+        <div class="autor-conclusao">
+            <img src="${autor.img}" alt="${autor.nome}">
+            <div class="autor-conclusao-info">
+                <h3>${autor.nome}</h3>
+                ${(respostasFinal[aidx]||[]).map((item,ix)=>`
+                    <div class="frase-concluida">${item.frase}</div>
+                    <div class="explica">${item.contexto}</div>
+                `).join('')}
+            </div>
+        </div>
+        `;
+    });
+    tela3.innerHTML = html;
+}
 </script>
 </body>
 </html>
